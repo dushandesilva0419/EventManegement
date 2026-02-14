@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - SmartQueue</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/userprofile.css">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo">🎫 SmartQueue</div>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/booktickets">Book Tickets</a>
+        <a href="/userprofile" class="active">My Profile</a>
+        <a href="/logout">Logout</a>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="cover-image"></div>
+
+        <div class="profile-main">
+            <div class="avatar-section">
+                <div class="avatar-wrapper">
+                    <img id="profileAvatar"
+                         th:src="${user.avatar != null ? user.avatar : '/images/default-avatar.png'}"
+                         alt="Profile"
+                         onerror="this.src='/images/default-avatar.png'">
+                    <label for="avatarInput" class="change-avatar">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                </div>
+
+                <div class="user-info">
+                    <h1 th:text="${user.fullName}">John Doe</h1>
+                    <p th:text="${user.email}">john@example.com</p>
+                    <span class="badge-premium">⭐ Premium Member</span>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <i class="fas fa-ticket"></i>
+                    <div>
+                        <span class="stat-num">28</span>
+                        <span class="stat-label">Total Bookings</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-heart"></i>
+                    <div>
+                        <span class="stat-num">15</span>
+                        <span class="stat-label">Favorites</span>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-star"></i>
+                    <div>
+                        <span class="stat-num">580</span>
+                        <span class="stat-label">Reward Points</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Content -->
+    <div class="profile-grid">
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="menu-card">
+                <div class="menu-item active" data-tab="personal">
+                    <i class="fas fa-user"></i>
+                    <span>Personal Info</span>
+                </div>
+                <div class="menu-item" data-tab="security">
+                    <i class="fas fa-lock"></i>
+                    <span>Security</span>
+                </div>
+                <div class="menu-item" data-tab="bookings">
+                    <i class="fas fa-ticket"></i>
+                    <span>My Bookings</span>
+                </div>
+                <div class="menu-item" data-tab="payment">
+                    <i class="fas fa-credit-card"></i>
+                    <span>Payment Methods</span>
+                </div>
+                <div class="menu-item" data-tab="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Personal Info Tab -->
+            <div class="tab-content active" id="personal">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Personal Information</h2>
+                        <button type="button" class="btn-edit" onclick="toggleEdit()">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                    </div>
+
+                    <form id="profileForm">
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label>Full Name</label>
+                                <input type="text" id="fullName" value="${user.fullName}" disabled>
+                            </div>
+                            <div class="form-field">
+                                <label>Email</label>
+                                <input type="email" id="email" value="${user.email}" disabled>
+                            </div>
+                        </div>
+
+                        <div class="btn-group" id="editActions" style="display: none;">
+                            <button type="button" class="btn-secondary" onclick="toggleEdit()">Cancel</button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Security Tab -->
+            <div class="tab-content" id="security">
+                <div class="card">
+                    <div class="card-header"><h2>Change Password</h2></div>
+                    <form id="passwordForm">
+                        <div class="form-field">
+                            <label>Current Password</label>
+                            <input type="password" placeholder="Enter current password">
+                        </div>
+                        <div class="form-field">
+                            <label>New Password</label>
+                            <input type="password" placeholder="Enter new password">
+                        </div>
+                        <div class="form-field">
+                            <label>Confirm Password</label>
+                            <input type="password" placeholder="Confirm new password">
+                        </div>
+                        <button type="submit" class="btn-primary">Update Password</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Bookings Tab -->
+            <div class="tab-content" id="bookings">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>My Bookings</h2>
+                        <a href="/mybookings" class="btn-link">View All</a>
+                    </div>
+                    <div class="bookings-list">
+                        <!-- Example booking -->
+                        <div class="booking-card">
+                            <img src="/images/movie4.png" alt="Movie">
+                            <div class="booking-details">
+                                <h3>The Flash</h3>
+                                <p><i class="far fa-calendar"></i> Feb 20, 2026 - 7:00 PM</p>
+                                <p><i class="fas fa-map-marker-alt"></i> IMAX Cinema Hall 2</p>
+                            </div>
+                            <span class="status confirmed">Confirmed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Tab -->
+            <div class="tab-content" id="payment">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Payment Methods</h2>
+                        <button class="btn-primary">+ Add Card</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notifications Tab -->
+            <div class="tab-content" id="notifications">
+                <div class="card">
+                    <div class="card-header"><h2>Notification Settings</h2></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<script src="/js/userprofile.js"></script>
+</body>
+</html>

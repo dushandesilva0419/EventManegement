@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Tickets - SmartQueue</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0a0e27;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+        }
+        .navbar a{
+            text-decoration:none;
+            color:#ddd;
+        }
+        .navbar a:hover{
+            color: #00d4ff;
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            margin-right: 25px;
+            text-decoration: none;
+            color: #ddd;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #00d4ff;
+        }
+
+        /* FEATURED SLIDER SECTION - FULL VIEWPORT */
+        .slider-section {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* SLIDER CONTAINER - FULL HEIGHT */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.6s ease-in-out;
+            height: 100%;
+        }
+
+        .slide {
+            min-width: 100%;
+            height: 100vh;
+            position: relative;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            padding: 0 80px;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to right, rgba(10, 14, 39, 0.98) 0%, rgba(10, 14, 39, 0.7) 40%, transparent 70%);
+            z-index: 1;
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+            max-width: 650px;
+            padding-top: 80px;
+        }
+
+        .slide-logo {
+            width: 250px;
+            height: auto;
+            margin-bottom: 30px;
+            opacity: 1;
+            object-fit: contain;
+        }
+
+        .slide-title {
+            font-size: 72px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1;
+            letter-spacing: -1px;
+        }
+
+        .slide-description {
+            font-size: 18px;
+            color: #d0d0d0;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            max-width: 550px;
+        }
+
+        .slide-meta {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .star {
+            color: #ffd700;
+            font-size: 18px;
+        }
+
+        .imdb {
+            background: #f5c518;
+            color: black;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .platform {
+            color: #e50914;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .slide-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .slide-buttons a {
+            text-decoration: none;
+            color: inherit;
+        }
+        .watch-btn, .info-btn {
+            padding: 16px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+        }
+
+        .watch-btn {
+            background: #00d4ff;
+            color: #0a0e27;
+        }
+
+        .watch-btn:hover {
+            background: #2b9fd9;
+            transform: scale(1.05);
+        }
+
+        .info-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+        }
+
+        .info-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* SLIDER NAVIGATION */
+        .slider-nav {
+            position: absolute;
+            bottom: 40px;
+            right: 40px;
+            display: flex;
+            gap: 12px;
+            z-index: 10;
+        }
+
+        .slider-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slider-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.1);
+        }
+
+        /* SLIDER INDICATORS */
+        .slider-indicators {
+            position: absolute;
+            bottom: 40px;
+            left: 80px;
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .indicator {
+            width: 35px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.4s;
+        }
+
+        .indicator.active {
+            background: white;
+            width: 60px;
+        }
+
+        /* CATEGORY SECTIONS */
+        .section {
+            padding: 60px 80px;
+            background: #0a0e27;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .section-header h2 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .card-row {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 15px;
+        }
+
+        .card-row::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        .card-row::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .card-row::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .card {
+            min-width: 200px;
+            max-width: 200px;
+            background: #11163a;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .card-image-wrapper {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            overflow: hidden;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .card-content {
+            padding: 15px;
+        }
+
+        .card-content h4 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .book-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #2b9fd9, #00d4ff);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .book-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(43, 159, 217, 0.4);
+        }
+
+        /* FOOTER */
+        .footer {
+            background: #0a0e27;
+            padding: 80px 60px 40px;
+            text-align: center;
+        }
+
+        .footer-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 50px;
+            color: white;
+        }
+
+        .studio-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto 60px;
+        }
+
+        .studio-item {
+            background: #e8e8e8;
+            border-radius: 22px;
+            padding: 30px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .studio-item a {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .studio-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.1);
+        }
+
+        .studio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: #6666dd;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: #00d4ff;
+        }
+
+        .footer-links.secondary {
+            margin-bottom: 40px;
+        }
+
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .social-icons a {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+
+        .social-icons a:hover {
+            transform: scale(1.2);
+        }
+
+        .social-icons img {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+            filter: brightness(0) invert(1);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .slide {
+                padding: 0 60px;
+            }
+
+            .slide-title {
+                font-size: 56px;
+            }
+
+            .section {
+                padding: 50px 60px;
+            }
+
+            .studio-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 15px 30px;
+            }
+
+            .slide {
+                padding: 0 30px;
+            }
+
+            .slide-content {
+                max-width: 100%;
+                padding-top: 100px;
+            }
+
+            .slide-logo {
+                width: 180px;
+            }
+
+            .slide-title {
+                font-size: 42px;
+            }
+
+            .slide-description {
+                font-size: 16px;
+            }
+
+            .slide-buttons {
+                flex-direction: column;
+            }
+
+            .watch-btn, .info-btn {
+                width: 100%;
+                justify-content: center;
+                text-decoration: none;
+            }
+
+            .slider-nav {
+                bottom: 30px;
+                right: 30px;
+            }
+
+            .slider-indicators {
+                left: 30px;
+                bottom: 30px;
+            }
+
+            .section {
+                padding: 40px 30px;
+            }
+
+            .card {
+                min-width: 160px;
+                max-width: 160px;
+            }
+
+            .card-image-wrapper {
+                height: 240px;
+            }
+
+            .footer {
+                padding: 60px 30px 30px;
+            }
+
+            .studio-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+            }
+
+            .studio-item {
+                padding: 20px 15px;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <a href="/"> <div class="logo">🎟️ SmartQueue</div></a>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/booktickets">Book Tickets</a>
+        <a href="/planevent">Plan Your Event</a>
+    </div>
+</div>
+
+<!-- FEATURED EVENTS SLIDER - FULL SCREEN -->
+<div class="slider-section">
+    <div class="slider-container">
+        <div class="slider-wrapper" id="sliderWrapper">
+
+            <!-- Slide 1: Avatar -->
+            <div class="slide" style="background-image: url('/images/avatar-fire-and-ash.jpg');">
+                <div class="slide-content">
+                    <h1 class="slide-title">Avatar: Fire & Ash</h1>
+                    <p class="slide-description">
+                        As fire rises and war spreads across Pandora, Jake Sully and Neytiri must protect their family
+                        and world from a deadly new threat.
+                    </p>
+                    <div class="slide-meta">
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span style="color: #666;">★</span>
+                        </div>
+                        <span class="imdb">IMDb</span>
+                        <span>8.1</span>
+                        <span class="platform">NETFLIX</span>
+                    </div>
+                    <div class="slide-buttons">
+                       <a href="https://youtu.be/nb_fFj_0rq8?si=AJisHZdCapGB0k0w"><button class="watch-btn">▶ Watch Trailer</button></a>
+                        <button class="info-btn">More Info →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 2: Stranger Things -->
+            <div class="slide" style="background-image: url('/images/feature3.jpg');">
+                <div class="slide-content">
+                    <h1 class="slide-title">Stranger Things</h1>
+                    <p class="slide-description">
+                        In the 1980s Indiana, a group of young friends witness supernatural forces and secret government exploits.
+                        As they search for answers, the children unravel a series of extraordinary mysteries.
+                    </p>
+                    <div class="slide-meta">
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                        </div>
+                        <span class="imdb">IMDb</span>
+                        <span>8.7</span>
+                        <span class="platform">NETFLIX</span>
+                    </div>
+                    <div class="slide-buttons">
+                        <a href="https://youtu.be/PssKpzB0Ah0?si=i3xiXIqpWmiZtuQu"> <button class="watch-btn">▶ Watch Trailer</button></a>
+                        <button class="info-btn">More Info →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 3: Money Heist -->
+            <div class="slide" style="background-image: url('/images/lacasedepapal.jpg');">
+                <div class="slide-content">
+                    <h1 class="slide-title">Money Heist</h1>
+                    <p class="slide-description">
+                        To carry out the biggest heist in history, a mysterious man called The Professor
+                        recruits a band of eight robbers who have a single characteristic: none of them has anything to lose.
+                    </p>
+                    <div class="slide-meta">
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span style="color: #666;">★</span>
+                        </div>
+                        <span class="imdb">IMDb</span>
+                        <span>8.2</span>
+                        <span class="platform">NETFLIX</span>
+                    </div>
+                    <div class="slide-buttons">
+                        <a href="https://youtu.be/_InqQJRqGW4?si=s1CZXw0x2uMlz8CW"> <button class="watch-btn">▶ Watch Trailer</button></a>
+                        <button class="info-btn">More Info →</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Slide 4: Fantastic Four -->
+            <div class="slide" style="background-image: url('/images/fantastic4.jpg');">
+                <div class="slide-content">
+                    <h1 class="slide-title">Fantastic Four</h1>
+                    <p class="slide-description">
+                        Mister Fantastic, Invisible Woman, Human Torch and the Thing face their most
+                        daunting challenge yet as they defend Earth from Galactus and Silver Surfer.
+                    </p>
+                    <div class="slide-meta">
+                        <div class="rating">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                        </div>
+                        <span class="imdb">IMDb</span>
+                        <span>9.5</span>
+                        <span class="platform">NETFLIX</span>
+                    </div>
+                    <div class="slide-buttons">
+                        <a href="https://youtu.be/18QQWa5MEcs?si=RN2f2oUd14zviHX9"> <button class="watch-btn">▶ Watch Trailer</button></a>
+                        <button class="info-btn">More Info →</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Slider Navigation Buttons -->
+        <div class="slider-nav">
+            <button class="slider-btn" id="prevBtn">‹</button>
+            <button class="slider-btn" id="nextBtn">›</button>
+        </div>
+
+        <!-- Slider Indicators -->
+        <div class="slider-indicators" id="indicators"></div>
+    </div>
+</div>
+
+<!-- MOVIES SECTION -->
+<div class="section">
+    <div class="section-header">
+        <h2>🎬 Movies</h2>
+    </div>
+
+    <div class="card-row">
+        <div class="card" data-movie-id="1">
+            <div class="card-image-wrapper">
+                <img src="/images/movie.png" alt="Epic Adventure">
+            </div>
+            <div class="card-content">
+                <h4>Epic Adventure</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="2">
+            <div class="card-image-wrapper">
+                <img src="/images/movie1.png" alt="Oppenheimer">
+            </div>
+            <div class="card-content">
+                <h4>Oppenheimer</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="3">
+            <div class="card-image-wrapper">
+                <img src="/images/movie2.png" alt="John Wick 4">
+            </div>
+            <div class="card-content">
+                <h4>John Wick 4</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="4">
+            <div class="card-image-wrapper">
+                <img src="/images/movie3.png" alt="Superman">
+            </div>
+            <div class="card-content">
+                <h4>Superman</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="5">
+            <div class="card-image-wrapper">
+                <img src="/images/movie4.png" alt="The Flash">
+            </div>
+            <div class="card-content">
+                <h4>The Flash</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="6">
+            <div class="card-image-wrapper">
+                <img src="/images/movie5.png" alt="Napoleon">
+            </div>
+            <div class="card-content">
+                <h4>Napoleon Bonaparte</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="7">
+            <div class="card-image-wrapper">
+                <img src="/images/movie6.png" alt="Barbie">
+            </div>
+            <div class="card-content">
+                <h4>Barbie</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <!-- Database Movies -->
+        <div th:each="movie : ${dbMovies}" class="card" th:data-movie-id="${movie.id}">
+            <div class="card-image-wrapper">
+                <img th:src="${movie.image}" th:alt="${movie.title}" alt="Movie">
+            </div>
+            <div class="card-content">
+                <h4 th:text="${movie.title}">Movie Title</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+    </div>  <!-- This closes card-row -->
+</div>  <!-- This closes section -->
+
+<!-- STAGE DRAMAS -->
+<div class="section">
+    <div class="section-header">
+        <h2>🎭 Stage Dramas</h2>
+    </div>
+
+    <div class="card-row">
+        <div class="card" data-movie-id="8">
+            <div class="card-image-wrapper">
+                <img src="/images/stage.jpg" alt="Classic Theater">
+            </div>
+            <div class="card-content">
+                <h4>Classic Theater</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+        <div class="card" data-movie-id="8">
+            <div class="card-image-wrapper">
+                <img src="/images/Ballo.jpg" alt="Classic Theater">
+            </div>
+            <div class="card-content">
+                <h4>Classic Theater</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+        <div class="card" data-movie-id="8">
+            <div class="card-image-wrapper">
+                <img src="/images/dikthala.jpg" alt="Classic Theater">
+            </div>
+            <div class="card-content">
+                <h4>Classic Theater</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="9">
+            <div class="card-image-wrapper">
+                <img src="/images/raja.jpg" alt="Modern Drama">
+            </div>
+            <div class="card-content">
+                <h4>Modern Drama</h4>
+                <a href="#" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+        <div class="card" data-movie-id="9">
+            <div class="card-image-wrapper">
+                <img src="/images/suddek_oba_amathai.jpg" alt="Modern Drama">
+            </div>
+            <div class="card-content">
+                <h4>Modern Drama</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+        <div class="card" data-movie-id="9">
+            <div class="card-image-wrapper">
+                <img src="/images/ballo2.jpg" alt="Modern Drama">
+            </div>
+            <div class="card-content">
+                <h4>Modern Drama</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <!-- Database Stage Dramas -->
+        <div th:each="drama : ${dbStageDramas}" class="card" th:data-movie-id="${drama.id}">
+            <div class="card-image-wrapper">
+                <img th:src="${drama.image}" th:alt="${drama.title}" alt="Stage Drama">
+            </div>
+            <div class="card-content">
+                <h4 th:text="${drama.title}">Drama Title</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+    </div>  <!-- This closes card-row -->
+</div>  <!-- This closes section -->
+
+<!-- MUSICALS -->
+<div class="section">
+    <div class="section-header">
+        <h2>🎶 Musicals</h2>
+    </div>
+
+    <div class="card-row">
+        <div class="card" data-movie-id="10">
+            <div class="card-image-wrapper">
+                <img src="/images/alan.jpg" alt="Live Concert">
+            </div>
+            <div class="card-content">
+                <h4>Live Concert</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="11">
+            <div class="card-image-wrapper">
+                <img src="/images/thee.webp" alt="Musical Show">
+            </div>
+            <div class="card-content">
+                <h4>Musical Show</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="12">
+            <div class="card-image-wrapper">
+                <img src="/images/music.webp" alt="Musical Performance">
+            </div>
+            <div class="card-content">
+                <h4>Musicals</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="13">
+            <div class="card-image-wrapper">
+                <img src="/images/evolution.jpg" alt="Evolution Tour">
+            </div>
+            <div class="card-content">
+                <h4>Evolution Tour</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <div class="card" data-movie-id="14">
+            <div class="card-image-wrapper">
+                <img src="/images/sanka.jpg" alt="Sanka Live">
+            </div>
+            <div class="card-content">
+                <h4>Sanka Live</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+        <!-- Database Musicals -->
+        <div th:each="musical : ${dbMusicals}" class="card" th:data-movie-id="${musical.id}">
+            <div class="card-image-wrapper">
+                <img th:src="${musical.image}" th:alt="${musical.title}" alt="Musical">
+            </div>
+            <div class="card-content">
+                <h4 th:text="${musical.title}">Musical Title</h4>
+                <a href="/ticket" class="book-btn">Book Ticket</a>
+            </div>
+        </div>
+
+    </div>  <!-- This closes card-row -->
+</div>  <!-- This closes section -->
+
+<!-- FOOTER -->
+<footer class="footer">
+    <h3 class="footer-title">Theaters & Studios</h3>
+
+    <div class="studio-grid">
+        <div class="studio-item">
+            <a href="https://www.scopecinemas.com/cinemas/scope-cinemas-multiplex-colombo-city-centre"><img src="/images/images.png" alt="Apple TV+"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://www.scopecinemas.com/experiences/imax-with-laser"> <img src="/images/imax2.png" alt="Apple TV+"></a>
+        </div>
+        <div class="studio-item">
+             <a href="https://www.scopecinemas.com/cinemas/liberty-by-scope-cinemas-kiribathgoda"><img src="/images/liberty.png" alt="Apple TV+"></a>
+        </div>
+        <div class="studio-item">
+             <a href="http://www.nelumpokuna.com/"> <img src="/images/nelum pokuna.jpg" alt="Apple TV+"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://www.litecinemas.lk/theaters/"> <img src="/images/litecinema.png" alt="DC"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://www.pvrcinemas.lk/"> <img src="/images/pvr.png" alt="AMC"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://www.hbo.com/"> <img src="/images/Brand 1.png" alt="HBO"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://www.warnerbros.com/"><img src="/images/Brand 2.png" alt="Warner Bros"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://www.disneyplus.com/welcome/unavailable"> <img src="/images/Brand 3.png" alt="Disney+"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://www.marvel.com/"> <img src="/images/Brand 4.png" alt="Marvel"></a>
+        </div>
+
+        <div class="studio-item">
+            <a href="https://www.netflix.com/"> <img src="/images/Brand 7.png" alt="Netflix"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://www.paramountplus.com/intl/"> <img src="/images/Brand 8.png" alt="Paramount"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://www.sonypictures.com/"> <img src="/images/Brand 9.png" alt="Sony"></a>
+        </div>
+        <div class="studio-item">
+            <a href="https://tv.apple.com/"> <img src="/images/Brand 10.png" alt="Apple TV+"></a>
+        </div>
+
+    </div>
+
+    <div class="footer-links">
+        <a href="#">Get the SmartQueue App</a>
+        <a href="#">Help</a>
+        <a href="#">Site Index</a>
+        <a href="#">SmartQueue Pro</a>
+        <a href="#">Advertising</a>
+    </div>
+
+    <div class="footer-links secondary">
+        <a href="#">Omni Developer</a>
+        <a href="#">Jobs</a>
+        <a href="#">Privacy Policy</a>
+    </div>
+
+    <div class="social-icons">
+        <a href="#"><img src="/images/facebook.png" alt="Facebook"></a>
+        <a href="#"><img src="/images/instagram.png" alt="Instagram"></a>
+        <a href="#"><img src="/images/linkedin.png" alt="LinkedIn"></a>
+        <a href="#"><img src="/images/youtube.png" alt="YouTube"></a>
+        <a href="#"><img src="/images/telegram.png" alt="Telegram"></a>
+    </div>
+</footer>
+
+<script>
+    // ============================================
+    // SLIDER FUNCTIONALITY
+    // ============================================
+    const sliderWrapper = document.getElementById('sliderWrapper');
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const indicatorsContainer = document.getElementById('indicators');
+
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+    let autoSlideInterval;
+
+    function createIndicators() {
+        for (let i = 0; i < totalSlides; i++) {
+            const indicator = document.createElement('div');
+            indicator.className = 'indicator';
+            if (i === 0) indicator.classList.add('active');
+            indicator.addEventListener('click', () => goToSlide(i));
+            indicatorsContainer.appendChild(indicator);
+        }
+    }
+
+    function updateIndicators() {
+        const indicators = document.querySelectorAll('.indicator');
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle('active', index === currentSlide);
+        });
+    }
+
+    function goToSlide(index) {
+        currentSlide = index;
+        sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+        updateIndicators();
+        resetAutoSlide();
+    }
+
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % totalSlides;
+        goToSlide(currentSlide);
+    }
+
+    function prevSlide() {
+        currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+        goToSlide(currentSlide);
+    }
+
+    function startAutoSlide() {
+        autoSlideInterval = setInterval(nextSlide, 5000);
+    }
+
+    function stopAutoSlide() {
+        clearInterval(autoSlideInterval);
+    }
+
+    function resetAutoSlide() {
+        stopAutoSlide();
+        startAutoSlide();
+    }
+
+    nextBtn.addEventListener('click', nextSlide);
+    prevBtn.addEventListener('click', prevSlide);
+
+    sliderWrapper.addEventListener('mouseenter', stopAutoSlide);
+    sliderWrapper.addEventListener('mouseleave', startAutoSlide);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevSlide();
+        if (e.key === 'ArrowRight') nextSlide();
+    });
+
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    sliderWrapper.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    sliderWrapper.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) nextSlide();
+        if (touchEndX > touchStartX + 50) prevSlide();
+    }
+
+    createIndicators();
+    startAutoSlide();
+</script>
+
+</body>
+</html>
