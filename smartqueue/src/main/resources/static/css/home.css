@@ -1,0 +1,229 @@
+/* Reset & Base */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    color: #fff;
+    overflow-x: hidden;
+    position: relative;
+    background-color: #0a0f1a; /* dark background */
+}
+
+/* Background Image */
+.bg-image {
+    position: absolute;
+    top: 80px;               /* below navbar */
+    left: 0;
+    width: auto;
+    height: auto;
+    min-width: 100%;
+    min-height: calc(100% - 80px);
+    z-index: 0;
+    background: url('/images/bg-home.png') no-repeat center top;
+    background-size: auto;
+    opacity: 0.3;
+}
+
+/* Floating Shapes */
+.background-shape {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(200px);
+    opacity: 0.5;
+    z-index: 1;
+    animation: floatShapes 30s ease-in-out infinite;
+}
+
+.shape1 { width: 600px; height: 600px; top: -200px; left: -250px; background: rgba(255,0,0,0.4); }
+.shape2 { width: 500px; height: 500px; bottom: -150px; right: -200px; background: rgba(0,255,0,0.3); }
+.shape3 { width: 400px; height: 400px; top: 50%; left: 50%; background: rgba(255,255,255,0.05); }
+
+@keyframes floatShapes {
+    0% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(50px) translateX(50px); }
+    100% { transform: translateY(0) translateX(0); }
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 60px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    margin: 20px;
+    box-shadow: 0 0 30px rgba(255,255,255,0.3);
+    z-index: 2;
+    position: relative;
+}
+
+.logo img {
+    height: 70px;      /* adjust as needed */
+    width: auto;
+}
+
+/* Navbar Links */
+.navbar a {
+    color: #fff;
+    margin-left: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.navbar a:hover {
+    text-shadow: 0 0 10px #ff0000, 0 0 20px #00ff00;
+}
+
+/* Buttons - Both Login and Sign Up with same style */
+.btn,
+.btn-outline {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #ff0000, #00ff00);
+    color: #000;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn:hover,
+.btn-outline:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px #ff0000, 0 0 40px #00ff00;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 120px 20px;
+    position: relative;
+    z-index: 2;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.hero h2 {
+    font-size: 50px;
+    font-family: poppins;
+    margin-bottom: 20px;
+    background: linear-gradient(45deg, #ff0000, #00ff00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glowText 3s ease-in-out infinite alternate, floatText 4s ease-in-out infinite;
+}
+
+.hero p {
+    font-size: 20px;
+    opacity: 0.9;
+}
+/* Ticket Images */
+.ticket {
+    position: absolute;
+    width: 150px; /* adjust size */
+    top: 50%;      /* vertical alignment with hero section */
+    z-index: 1;    /* behind hero text */
+    pointer-events: none; /* don't interfere with clicks */
+    transform: translateY(-50%);
+    animation: floatTickets 6s ease-in-out infinite alternate;
+}
+
+.ticket-left {
+    left: 50px;  /* distance from left edge */
+}
+
+.ticket-right {
+    right: 50px; /* distance from right edge */
+    transform: translateY(-50%) scaleX(-1); /* flip horizontally for symmetry */
+}
+
+@keyframes floatTickets {
+    0% { transform: translateY(-50%) translateX(0px); }
+    50% { transform: translateY(-55%) translateX(10px); }
+    100% { transform: translateY(-50%) translateX(0px); }
+}
+
+
+.cta {
+    display: inline-block;
+    margin-top: 30px;
+    padding: 12px 30px;
+    background: linear-gradient(45deg, #ff0000, #00ff00);
+    color: #000;
+    border-radius: 30px;
+    font-weight: bold;
+    box-shadow: 0 0 30px #ff0000, 0 0 30px #00ff00;
+    transition: all 0.3s ease;
+}
+
+.cta:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 50px #ff0000, 0 0 50px #00ff00;
+}
+
+/* Features */
+.features {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    padding: 60px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 2;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    padding: 40px;
+    border-radius: 20px;
+    font-size: 20px;
+    backdrop-filter: blur(15px);
+    text-align: center;
+    transition: all 0.3s ease;
+    width: 250px;
+    box-shadow: 0 0 20px #ff0000, 0 0 20px #00ff00;
+}
+.features a.card{
+    text-decoration:none;
+    color:white;
+    }
+
+.card i {
+    font-size: 40px;
+    margin-bottom: 15px;
+    display: block;
+    background: linear-gradient(45deg, #ff0000, #00ff00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: glowText 3s ease-in-out infinite alternate;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 40px #ff0000, 0 0 60px #00ff00;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    opacity: 0.8;
+    position: relative;
+    z-index: 2;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+@keyframes floatText {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-10px); } /* move up */
+    100% { transform: translateY(0); }     /* back to original */
+}
